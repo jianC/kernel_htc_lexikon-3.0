@@ -471,6 +471,13 @@ config MACH_FLYER
        help
          Support for the Qualcomm Flyer board.
 
+config MACH_LEXIKON
+       depends on ARCH_MSM7X30
+       default n
+       bool "Lexikon"
+       help
+         Support for the Qualcomm Lexikon board.
+
 config MACH_VIVO
        depends on ARCH_MSM7X30
        default n

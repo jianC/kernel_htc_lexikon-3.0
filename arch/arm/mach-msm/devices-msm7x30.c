@@ -40,6 +40,20 @@
 #include <mach/dal_axi.h>
 #include <mach/msm_memtypes.h>
 
+void config_gpio_table_dbg(uint32_t *table, int len, char *file, int line)
+{
+	int n, rc;
+	for (n = 0; n < len; n++) {
+		rc = gpio_tlmm_config(table[n], GPIO_CFG_ENABLE);
+		if (rc) {
+			pr_err("%s: gpio_tlmm_config(%#x)[%d]=%d (%s:%d)\n",
+			       __func__, table[n], n, rc, file, line);
+			break;
+		}
+	}
+}
+
+unsigned long msm_fb_base;
 /* EBI THERMAL DRIVER */
 static struct resource msm_ebi0_thermal_resources[] = {
 	{
@@ -263,6 +277,48 @@ struct platform_device msm_device_i2c = {
 	.id		= 0,
 	.num_resources	= ARRAY_SIZE(resources_i2c),
 	.resource	= resources_i2c,
+};
+
+static struct resource qsd_spi_resources[] = {
+	{
+		.name   = "spi_irq_in",
+		.start	= INT_SPI_INPUT,
+		.end	= INT_SPI_INPUT,
+		.flags	= IORESOURCE_IRQ,
+	},
+	{
+		.name   = "spi_irq_out",
+		.start	= INT_SPI_OUTPUT,
+		.end	= INT_SPI_OUTPUT,
+		.flags	= IORESOURCE_IRQ,
+	},
+	{
+		.name   = "spi_irq_err",
+		.start	= INT_SPI_ERROR,
+		.end	= INT_SPI_ERROR,
+		.flags	= IORESOURCE_IRQ,
+	},
+	{
+		.name   = "spi_base",
+		.start	= MSM_SPI_PHYS,
+		.end	= MSM_SPI_PHYS + MSM_SPI_SIZE - 1,
+		.flags	= IORESOURCE_MEM,
+	},
+	{
+		.name   = "spidm_channels",
+		.flags  = IORESOURCE_DMA,
+	},
+	{
+		.name   = "spidm_crci",
+		.flags  = IORESOURCE_DMA,
+	},
+};
+
+struct platform_device qsd_device_spi = {
+	.name		= "spi_qsd",
+	.id		= 0,
+	.num_resources	= ARRAY_SIZE(qsd_spi_resources),
+	.resource	= qsd_spi_resources,
 };
 
 #define MSM_QUP_PHYS           0xA8301000

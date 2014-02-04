@@ -23,6 +23,7 @@ obj-$(CONFIG_INPUT_CAPELLA_CM3628)	+= cm3628.o
 obj-$(CONFIG_VP_A1026)		+= a1026.o
 obj-$(CONFIG_VP_A1028)		+= a1028.o
 obj-$(CONFIG_AMP_TPA2051D3)		+= tpa2051d3.o
+obj-$(CONFIG_ARCH_MSM_FLASHLIGHT)	+= adp1650_flashlight.o
 obj-$(CONFIG_INPUT_ISL29028)	+= isl29028.o
 obj-$(CONFIG_INPUT_ISL29029)	+= isl29029.o
 obj-$(CONFIG_SMB349)            += smb349.o
