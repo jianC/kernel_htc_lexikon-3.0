@@ -565,6 +565,7 @@ obj-$(CONFIG_MSM_RMT_STORAGE_CLIENT) += rmt_storage_client-7x30.o
 else
 obj-$(CONFIG_MSM_RMT_STORAGE_CLIENT) += rmt_storage_client.o
 endif
+obj-$(CONFIG_MSM_RMT_STORAGE_SERVER) += rmt_storage_server.o
 obj-$(CONFIG_MSM_SDIO_SMEM) += sdio_smem.o
 obj-$(CONFIG_MSM_RPM) += rpm.o rpm_resources.o
 obj-$(CONFIG_MSM_MPM) += mpm.o
