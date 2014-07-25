@@ -529,35 +529,20 @@ static struct i2c_board_info i2c_Sensors_devicesXB[] = {
 
 static int pm8058_gpios_init(void)
 {
-	int rc, i;
+	int rc;
 
-	struct pm8xxx_gpio_init_info tp_gpio_cfgs[] = {
+	struct pm8xxx_gpio_init_info tp_rstz = {
+		PM8058_GPIO_PM_TO_SYS(LEXIKON_TP_RSTz),
 		{
-			PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_TP_INT_N),
-			{
-				.direction     = PM_GPIO_DIR_IN,
-				.output_buffer = 0,
-				.output_value  = 0,
-				.pull          = PM_GPIO_PULL_UP_31P5,
-				.vin_sel       = PM8058_GPIO_VIN_L5,
-				.out_strength  = 0,
-				.function      = PM_GPIO_FUNC_NORMAL,
-				.inv_int_pol   = 0,
-			},
-		},
-		{
-			PM8058_GPIO_PM_TO_SYS(LEXIKON_TP_RSTz),
-			{
-				.direction     = PM_GPIO_DIR_OUT,
-				.output_buffer = PM_GPIO_OUT_BUF_CMOS,
-				.output_value  = 1,
-				.pull          = PM_GPIO_PULL_NO,
-				.vin_sel       = PM8058_GPIO_VIN_L5,
-				.out_strength  = PM_GPIO_STRENGTH_HIGH,
-				.function      = PM_GPIO_FUNC_NORMAL,
-				.inv_int_pol   = 0,
-			},
-		},
+			.direction     = PM_GPIO_DIR_OUT,
+			.output_buffer = PM_GPIO_OUT_BUF_CMOS,
+			.output_value  = 1,
+			.pull          = PM_GPIO_PULL_NO,
+			.vin_sel       = PM8058_GPIO_VIN_L5,
+			.out_strength  = PM_GPIO_STRENGTH_HIGH,
+			.function      = PM_GPIO_FUNC_NORMAL,
+			.inv_int_pol   = 0,
+		}
 	};
 
 	struct pm8xxx_gpio_init_info gpio18 = {
@@ -753,13 +738,10 @@ static int pm8058_gpios_init(void)
 		return rc;
 	}
 
-	for (i = 0; i < ARRAY_SIZE(tp_gpio_cfgs); ++i) {
-		rc = pm8xxx_gpio_config(tp_gpio_cfgs[i].gpio,
-					&tp_gpio_cfgs[i].config);
-		if (rc < 0) {
-			pr_err("[TP] pmic gpio cfg (%d) failed\n", i);
-			return rc;
-		}
+	rc = pm8xxx_gpio_config(tp_rstz.gpio, &tp_rstz.config);
+	if (rc) {
+		pr_err("%s LEXIKON_TP_RSTz config failed\n", __func__);
+		return rc;
 	}
 
 	/* direct keys */
