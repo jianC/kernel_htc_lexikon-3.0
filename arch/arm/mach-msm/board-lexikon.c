@@ -310,7 +310,7 @@ static struct i2c_board_info i2c_ts_devices[] = {
 	},
 };
 
-static int config_lexikon_proximity_gpios(int on)
+static void config_lexikon_proximity_gpios(int on)
 {
 	static struct pm_gpio proximity_gpio = {
 		.direction      = PM_GPIO_DIR_IN,
@@ -323,15 +323,12 @@ static int config_lexikon_proximity_gpios(int on)
 		.inv_int_pol    = 0,
 	};
 
-	if (on) {
+	if (on)
 		proximity_gpio.pull = PM_GPIO_PULL_NO;
-		pm8xxx_gpio_config(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_PS_INT_N), &proximity_gpio);
-	} else {
+	else
 		proximity_gpio.pull = PM_GPIO_PULL_DN;
-		pm8xxx_gpio_config(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_PS_INT_N), &proximity_gpio);
-	}
 
-	return 0;
+    pm8xxx_gpio_config(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_PS_INT_N), &proximity_gpio);
 }
 
 static int __capella_cm3602_power(int on)
@@ -2317,7 +2314,6 @@ static void __init msm_device_i2c_2_init(void)
 
 static struct msm_i2c_platform_data qup_i2c_pdata = {
 	.clk_freq = 384000,
-	.pclk = "camif_pad_pclk",
 	.msm_i2c_config_gpio = qup_i2c_gpio_config,
 };
 
@@ -2595,12 +2591,12 @@ static int msm_sdcc_get_wpswitch(struct device *dv)
 
 #if defined(CONFIG_MMC_MSM_SDC1_SUPPORT)
 static struct mmc_platform_data msm7x30_sdc1_data = {
-	.ocr_mask	= MMC_VDD_165_195,
+	.ocr_mask	    = MMC_VDD_165_195,
 	.translate_vdd	= msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 	.msmsdcc_fmin	= 144000,
 	.msmsdcc_fmid	= 24576000,
-	.msmsdcc_fmax	= 50000000,
+	.msmsdcc_fmax	= 49152000,
 	.nonremovable	= 0,
 };
 #endif
@@ -2691,11 +2687,17 @@ static void __init msm7x30_init_mmc(void)
 	}
 
 #ifdef CONFIG_MMC_MSM_SDC1_SUPPORT
+	if (machine_is_msm7x30_fluid()) {
+		msm7x30_sdc1_data.ocr_mask =  MMC_VDD_27_28 | MMC_VDD_28_29;
+		msm_sdc1_lvlshft_enable();
+	}
 	sdcc_vreg_data[0].vreg_data = vreg_s3;
 	sdcc_vreg_data[0].level = 1800;
 	msm_add_sdcc(1, &msm7x30_sdc1_data);
 #endif
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
+	if (machine_is_msm8x55_svlte_surf())
+		msm7x30_sdc2_data.msmsdcc_fmax =  24576000;
 	sdcc_vreg_data[1].vreg_data = vreg_s3;
 	sdcc_vreg_data[1].level = 1800;
 	msm7x30_sdc2_data.swfi_latency =
