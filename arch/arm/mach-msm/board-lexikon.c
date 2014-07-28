@@ -1448,6 +1448,18 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 	},
 };
 
+#ifdef CONFIG_SPI_QSD
+static struct spi_board_info msm_spi_board_info[] __initdata = {
+	{
+		.modalias	    = "spi_qsd",
+		.mode		    = SPI_MODE_3,
+		.bus_num	    = 0,
+		.chip_select	= 2,
+		.max_speed_hz	= 10000000,
+	}
+};
+#endif
+
 static uint32_t qsd_spi_gpio_on_table[] = {
 	PCOM_GPIO_CFG(45, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
 	PCOM_GPIO_CFG(47, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
@@ -3020,6 +3032,10 @@ static void __init lexikon_init(void)
 #endif
 	msm7x30_init_mmc();
 	msm_qsd_spi_init();
+
+#ifdef CONFIG_SPI_QSD
+	spi_register_board_info(msm_spi_board_info, ARRAY_SIZE(msm_spi_board_info));
+#endif
 
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
 	BUG_ON(msm_pm_boot_init(MSM_PM_BOOT_CONFIG_RESET_VECTOR, ioremap(0x0, PAGE_SIZE)));
