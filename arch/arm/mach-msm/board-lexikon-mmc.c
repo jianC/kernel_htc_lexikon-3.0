@@ -35,11 +35,18 @@
 #include "board-lexikon.h"
 #include "proc_comm.h"
 
-#define LEXIKON_SDMC_CD_N_TO_SYS PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_SDMC_CD_N)
-
-extern int msm_add_sdcc(unsigned int controller, struct mmc_platform_data *plat);
-
-#define LEXIKON_MMC_VDD		(MMC_VDD_28_29 | MMC_VDD_29_30)
+static uint32_t movinand_on_gpio_table[] = {
+	PCOM_GPIO_CFG(64, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* CLK */
+	PCOM_GPIO_CFG(65, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* CMD */
+	PCOM_GPIO_CFG(66, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT3 */
+	PCOM_GPIO_CFG(67, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT2 */
+	PCOM_GPIO_CFG(68, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT1 */
+	PCOM_GPIO_CFG(69, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT0 */
+	PCOM_GPIO_CFG(115, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT4 */
+	PCOM_GPIO_CFG(114, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT5 */
+	PCOM_GPIO_CFG(113, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT6 */
+	PCOM_GPIO_CFG(112, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_10MA), /* DAT7 */
+};
 
 static uint32_t wifi_on_gpio_table[] = {
 	PCOM_GPIO_CFG(116, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_4MA), /* DAT3 */
@@ -153,6 +160,10 @@ int __init lexikon_init_mmc(unsigned int sys_rev)
 	wifi_status_cb = NULL;
 
 	printk(KERN_INFO "lexikon: %s\n", __func__);
+	
+	/* SDC2: MoviNAND */
+	config_gpio_table(movinand_on_gpio_table,
+			  ARRAY_SIZE(movinand_on_gpio_table));
 
 	/* initial WIFI_SHUTDOWN# */
 	id = PCOM_GPIO_CFG(LEXIKON_GPIO_WIFI_SHUTDOWN_N, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
