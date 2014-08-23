@@ -703,19 +703,14 @@ static int pm8058_gpios_init(void)
 		PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_SDMC_CD_N),
 		{
 			.direction      = PM_GPIO_DIR_IN,
-			.pull           = PM_GPIO_PULL_UP_1P5,
-			.vin_sel        = 2,
+			.pull           = PM_GPIO_PULL_UP_31P5,
+			.vin_sel        = PM8058_GPIO_VIN_L5,
 			.function       = PM_GPIO_FUNC_NORMAL,
 			.inv_int_pol    = 0,
 		},
 	};
-
-	rc = pm8xxx_gpio_config(sdcc_det.gpio, &sdcc_det.config);
-	if (rc) {
-		pr_err("%s GPIO_SDMC_CD_N config failed\n", __func__);
-		return rc;
-	}
 #endif
+
 	/* led */
 	rc = pm8xxx_gpio_config(gpio24.gpio, &gpio24.config);
 	if (rc) {
@@ -759,6 +754,17 @@ static int pm8058_gpios_init(void)
 		pr_err("%s LEXIKON_AUD_HANDSET_ENO config failed\n", __func__);
 		return rc;
 	}
+
+#ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
+	if (machine_is_msm7x30_fluid())
+		sdcc_det.config.inv_int_pol = 1;
+
+	rc = pm8xxx_gpio_config(sdcc_det.gpio, &sdcc_det.config);
+	if (rc) {
+		pr_err("%s LEXIKON_GPIO_SDMC_CD_N config failed\n", __func__);
+		return rc;
+	}
+#endif
 
 	/* P-sensor and light sensor */
 	rc = pm8xxx_gpio_config(psensor_gpio.gpio, &psensor_gpio.config);
