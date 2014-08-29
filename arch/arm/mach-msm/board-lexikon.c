@@ -497,12 +497,12 @@ static struct i2c_board_info i2c_Sensors_devicesXA[] = {
 	{
 		I2C_BOARD_INFO(AKM8975_I2C_NAME, 0x1A >> 1),
 		.platform_data = &compass_platform_data,
-		.irq = MSM_GPIO_TO_INT(LEXIKON_GPIO_COMPASS_INT),
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE, LEXIKON_GPIO_COMPASS_INT),
 	},
 	{
 		I2C_BOARD_INFO(BMA150_I2C_NAME, 0x70 >> 1),
 		.platform_data = &gsensor_platform_data,
-		.irq = MSM_GPIO_TO_INT(LEXIKON_GPIO_GSENSOR_INT_N),
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE, LEXIKON_GPIO_GSENSOR_INT_N),
 	},
 };
 
@@ -515,12 +515,12 @@ static struct i2c_board_info i2c_Sensors_devicesXB[] = {
 	{
 		I2C_BOARD_INFO(AKM8975_I2C_NAME, 0x1A >> 1),
 		.platform_data = &compass_platform_data,
-		.irq = MSM_GPIO_TO_INT(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_COMPASS_INT_N_XB)),
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE,LEXIKON_GPIO_COMPASS_INT_N_XB),
 	},
 	{
 		I2C_BOARD_INFO(BMA150_I2C_NAME, 0x70 >> 1),
 		.platform_data = &gsensor_platform_data,
-		.irq = MSM_GPIO_TO_INT(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_GSENSOR_INT_N_XB)),
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE, LEXIKON_GPIO_GSENSOR_INT_N_XB),
 	},
 };
 
