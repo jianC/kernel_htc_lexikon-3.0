@@ -1858,43 +1858,43 @@ static struct i2c_board_info msm_camera_boardinfo[] __initdata = {
 
 static uint32_t camera_off_gpio_table[] = {
 	/* parallel CAMERA interfaces */
-	PCOM_GPIO_CFG(LEXIKON_CAM_RST,  0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA), /* RST */
-	PCOM_GPIO_CFG(LEXIKON_CAM_PWD,  0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA), /* PWD */
-	PCOM_GPIO_CFG(2,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT2 */
-	PCOM_GPIO_CFG(3,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT3 */
-	PCOM_GPIO_CFG(4,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT4 */
-	PCOM_GPIO_CFG(5,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT5 */
-	PCOM_GPIO_CFG(6,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT6 */
-	PCOM_GPIO_CFG(7,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT7 */
-	PCOM_GPIO_CFG(8,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT8 */
-	PCOM_GPIO_CFG(9,  0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT9 */
-	PCOM_GPIO_CFG(10, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT10 */
-	PCOM_GPIO_CFG(11, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* DAT11 */
-	PCOM_GPIO_CFG(12, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* PCLK */
-	PCOM_GPIO_CFG(13, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* HSYNC_IN */
-	PCOM_GPIO_CFG(14, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_8MA), /* VSYNC_IN */
-	PCOM_GPIO_CFG(15, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_14MA), /* MCLK */
+	GPIO_CFG(LEXIKON_CAM_RST, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	GPIO_CFG(LEXIKON_CAM_PWD, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	GPIO_CFG(2,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT2 */
+	GPIO_CFG(3,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT3 */
+	GPIO_CFG(4,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT4 */
+	GPIO_CFG(5,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT5 */
+	GPIO_CFG(6,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT6 */
+	GPIO_CFG(7,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT7 */
+	GPIO_CFG(8,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT8 */
+	GPIO_CFG(9,  0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT9 */
+	GPIO_CFG(10, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT10 */
+	GPIO_CFG(11, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* DAT11 */
+	GPIO_CFG(12, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* PCLK */
+	GPIO_CFG(13, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* HSYNC_IN */
+	GPIO_CFG(14, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_8MA), /* VSYNC_IN */
+	GPIO_CFG(15, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_14MA), /* MCLK */
 
 };
 
 static uint32_t camera_on_gpio_table[] = {
 	/* parallel CAMERA interfaces */
-	PCOM_GPIO_CFG(LEXIKON_CAM_RST,   0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* RST */
-	PCOM_GPIO_CFG(LEXIKON_CAM_PWD,   0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* PWD */
-	PCOM_GPIO_CFG(2,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT2 */
-	PCOM_GPIO_CFG(3,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT3 */
-	PCOM_GPIO_CFG(4,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT4 */
-	PCOM_GPIO_CFG(5,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT5 */
-	PCOM_GPIO_CFG(6,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT6 */
-	PCOM_GPIO_CFG(7,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT7 */
-	PCOM_GPIO_CFG(8,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT8 */
-	PCOM_GPIO_CFG(9,  1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT9 */
-	PCOM_GPIO_CFG(10, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT10 */
-	PCOM_GPIO_CFG(11, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* DAT11 */
-	PCOM_GPIO_CFG(12, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* PCLK */
-	PCOM_GPIO_CFG(13, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* HSYNC_IN */
-	PCOM_GPIO_CFG(14, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* VSYNC_IN */
-	PCOM_GPIO_CFG(15, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_16MA), /* MCLK */
+	GPIO_CFG(LEXIKON_CAM_RST, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
+	GPIO_CFG(LEXIKON_CAM_PWD, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
+	GPIO_CFG(2,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT2 */
+	GPIO_CFG(3,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT3 */
+	GPIO_CFG(4,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT4 */
+	GPIO_CFG(5,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT5 */
+	GPIO_CFG(6,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT6 */
+	GPIO_CFG(7,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT7 */
+	GPIO_CFG(8,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT8 */
+	GPIO_CFG(9,  1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT9 */
+	GPIO_CFG(10, 1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT10 */
+	GPIO_CFG(11, 1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* DAT11 */
+	GPIO_CFG(12, 1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* PCLK */
+	GPIO_CFG(13, 1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* HSYNC_IN */
+	GPIO_CFG(14, 1, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA), /* VSYNC_IN */
+	GPIO_CFG(15, 1, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), /* MCLK */
 
 };
 
@@ -1982,21 +1982,31 @@ static int lexikon_sensor_vreg_on(void)
 
 static int lexikon_sensor_vreg_off(void)
 {
-	int rc;
+  int rc;
 
-	/*camera analog power*/
-	rc = lexikon_sensor_power_disable("gp6");
-	/*camera digital power*/
-	rc = lexikon_sensor_power_disable("gp4");
-	/*camera VCM power*/
-	rc = lexikon_sensor_power_disable("wlan");
-	/*camera IO power*/
-	if (system_rev == 0)
-		rc = lexikon_sensor_power_disable("gp2");
-	else
-		rc = lexikon_sensor_power_disable("lvsw1");
-
-	return rc;
+  if (system_rev == 0)
+  {
+    /*camera analog power*/
+    rc = lexikon_sensor_power_disable("gp6");
+    /*camera digital power*/
+    rc = lexikon_sensor_power_disable("gp4");
+    /*camera IO power*/
+    rc = lexikon_sensor_power_disable("gp2");
+    /*camera VCM power*/
+    rc = lexikon_sensor_power_disable("wlan");
+  }
+  else
+  {
+    /*camera analog power*/
+    rc = lexikon_sensor_power_disable("gp6");
+    /*camera digital power*/
+    rc = lexikon_sensor_power_disable("wlan");
+    /*camera IO power*/
+    rc = lexikon_sensor_power_disable("lvsw1");
+    /*camera VCM power*/
+    rc = lexikon_sensor_power_disable("gp4");
+  }
+  return rc;
 }
 
 static int config_lexikon_camera_on_gpios(void)
@@ -2105,10 +2115,10 @@ static struct msm_camera_sensor_info msm_camera_sensor_s5k4e1gx_data = {
 	.camera_power_on = lexikon_sensor_vreg_on,
 	.camera_power_off = lexikon_sensor_vreg_off,
 	.pdata          = &msm_camera_device_data,
-        .flash_type     = MSM_CAMERA_FLASH_LED,
-        .resource       = msm_camera_resources,
-        .num_resources  = ARRAY_SIZE(msm_camera_resources),
-        .flash_cfg      = &msm_camera_sensor_flash_cfg,
+    .flash_type     = MSM_CAMERA_FLASH_LED,
+    .resource       = msm_camera_resources,
+    .num_resources  = ARRAY_SIZE(msm_camera_resources),
+    .flash_cfg      = &msm_camera_sensor_flash_cfg,
 	.sensor_lc_disable = true, /* disable sensor lens correction */
 };
 
@@ -2882,87 +2892,87 @@ static void lexikon_te_gpio_config(void)
 #endif
 
 static struct platform_device *devices[] __initdata = {
-        &ram_console_device,
+    &ram_console_device,
 #if defined(CONFIG_SERIAL_MSM) || defined(CONFIG_MSM_SERIAL_DEBUGGER)
-        &msm_device_uart2,
+    &msm_device_uart2,
 #endif
 #ifdef CONFIG_SERIAL_MSM_HS_PURE_ANDROID
-        &lexikon_bcm_bt_lpm_device,
+    &lexikon_bcm_bt_lpm_device,
 #endif
 #ifdef CONFIG_MSM_PROC_COMM_REGULATOR
-        &msm_proccomm_regulator_dev,
+    &msm_proccomm_regulator_dev,
 #endif
-        &asoc_msm_pcm,
-        &asoc_msm_dai0,
-        &asoc_msm_dai1,
+    &asoc_msm_pcm,
+    &asoc_msm_dai0,
+    &asoc_msm_dai1,
 #if defined(CONFIG_SND_MSM_MVS_DAI_SOC)
-        &asoc_msm_mvs,
-        &asoc_mvs_dai0,
-        &asoc_mvs_dai1,
+    &asoc_msm_mvs,
+    &asoc_mvs_dai0,
+    &asoc_mvs_dai1,
 #endif
-        &msm_device_smd,
-        &msm_device_dmov,
-        &msm_device_otg,
-        &qsd_device_spi,
+    &msm_device_smd,
+    &msm_device_dmov,
+    &msm_device_otg,
+    &qsd_device_spi,
 #ifdef CONFIG_MSM_SSBI
-        &msm_device_ssbi_pmic1,
+    &msm_device_ssbi_pmic1,
 #endif
 #ifdef CONFIG_I2C_SSBI
-        &msm_device_ssbi7,
+    &msm_device_ssbi7,
 #endif
-        &android_pmem_device,
-        &msm_migrate_pages_device,
+    &android_pmem_device,
+    &msm_migrate_pages_device,
 #ifdef CONFIG_MSM_ROTATOR
-        &msm_rotator_device,
+    &msm_rotator_device,
 #endif
-        &android_pmem_adsp_device,
+    &android_pmem_adsp_device,
 # if 0
-        &android_pmem_audio_device,
+    &android_pmem_audio_device,
 #endif
-        &msm_device_i2c,
-        &msm_device_i2c_2,
+    &msm_device_i2c,
+    &msm_device_i2c_2,
 #ifdef CONFIG_INPUT_CAPELLA_CM3602
-	&capella_cm3602,
+&capella_cm3602,
 #endif
 #ifdef CONFIG_MSM7KV2_AUDIO
-        &msm_aictl_device,
-        &msm_mi2s_device,
-        &msm_lpa_device,
-        &msm_aux_pcm_device,
+    &msm_aictl_device,
+    &msm_mi2s_device,
+    &msm_lpa_device,
+    &msm_aux_pcm_device,
 #endif
-        &msm_device_adspdec,
-        &qup_device_i2c,
-        &msm_kgsl_3d0,
-        &msm_kgsl_2d0,
-        &msm_device_vidc_720p,
+    &msm_device_adspdec,
+    &qup_device_i2c,
+    &msm_kgsl_3d0,
+    &msm_kgsl_2d0,
+    &msm_device_vidc_720p,
 #ifdef CONFIG_MSM_GEMINI
-        &msm_gemini_device,
+    &msm_gemini_device,
 #endif
 #ifdef CONFIG_MSM_VPE
-        &msm_vpe_device,
+    &msm_vpe_device,
 #endif
 #if defined(CONFIG_TSIF) || defined(CONFIG_TSIF_MODULE)
-        &msm_device_tsif,
+    &msm_device_tsif,
 #endif
 #if defined(CONFIG_CRYPTO_DEV_QCRYPTO) || \
-                defined(CONFIG_CRYPTO_DEV_QCRYPTO_MODULE)
-        &qcrypto_device,
+            defined(CONFIG_CRYPTO_DEV_QCRYPTO_MODULE)
+    &qcrypto_device,
 #endif
 #if defined(CONFIG_CRYPTO_DEV_QCEDEV) || \
-                defined(CONFIG_CRYPTO_DEV_QCEDEV_MODULE)
-        &qcedev_device,
+            defined(CONFIG_CRYPTO_DEV_QCEDEV_MODULE)
+    &qcedev_device,
 #endif
 #ifdef CONFIG_S5K4E1GX
-        &msm_camera_sensor_s5k4e1gx,
+    &msm_camera_sensor_s5k4e1gx,
 #endif
-        &htc_battery_pdev,
-        &msm_ebi0_thermal,
-        &msm_ebi1_thermal,
+    &htc_battery_pdev,
+    &msm_ebi0_thermal,
+    &msm_ebi1_thermal,
 #ifdef CONFIG_SERIAL_MSM_HS
-        &msm_device_uart_dm1,
+    &msm_device_uart_dm1,
 #endif
 #ifdef CONFIG_BT
-        &lexikon_rfkill,
+    &lexikon_rfkill,
 #endif
 	&cable_detect_device,
 	&htc_headset_mgr,
