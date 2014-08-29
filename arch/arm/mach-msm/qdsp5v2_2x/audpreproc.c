@@ -364,7 +364,7 @@ int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 		}
 	}
 
-	#if defined(CONFIG_MACH_SPADE) || defined(CONFIG_MACH_GLACIER) || defined(CONFIG_MACH_VISION)
+	#if defined(CONFIG_MACH_SPADE) || defined(CONFIG_MACH_GLACIER) || defined(CONFIG_MACH_VISION) || defined(CONFIG_MACH_LEXIKON)
 	/* hack for audio record */
 	lidx = 1;
 	#endif
