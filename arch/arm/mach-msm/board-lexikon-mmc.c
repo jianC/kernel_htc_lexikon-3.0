@@ -113,7 +113,7 @@ static struct mmc_platform_data lexikon_wifi_data = {
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 	.msmsdcc_fmin   = 144000,
 	.msmsdcc_fmid   = 24576000,
-	.msmsdcc_fmax   = 49152000,
+	.msmsdcc_fmax   = 50000000,
 	.nonremovable   = 0,
 };
 
