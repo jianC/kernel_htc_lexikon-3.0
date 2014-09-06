@@ -1368,7 +1368,6 @@ static struct i2c_board_info tpa2051_devices[] = {
 	{
 		I2C_BOARD_INFO(TPA2051D3_I2C_NAME, 0xE0 >> 1),
 		.platform_data = &tpa2051d3_platform_data,
-		.irq = MSM_GPIO_TO_INT(PM8058_GPIO_PM_TO_SYS(LEXIKON_GPIO_GSENSOR_INT_N)),
 	},
 };
 
