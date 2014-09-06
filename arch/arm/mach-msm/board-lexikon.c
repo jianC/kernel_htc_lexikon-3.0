@@ -301,12 +301,12 @@ static struct i2c_board_info i2c_ts_devices[] = {
 	{
 		I2C_BOARD_INFO(ATMEL_QT602240_NAME, 0x94 >> 1),
 		.platform_data = &lexikon_ts_atmel_data,
-		.irq = MSM_GPIO_TO_INT(LEXIKON_GPIO_TP_INT_N)
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE, LEXIKON_GPIO_TP_INT_N)
 	},
 	{
 		I2C_BOARD_INFO(SYNAPTICS_3K_NAME, 0x20),
 		.platform_data = &lexikon_ts_3k_data,
-		.irq = MSM_GPIO_TO_INT(LEXIKON_GPIO_TP_INT_N)
+		.irq = PM8058_GPIO_IRQ(PM8058_IRQ_BASE, LEXIKON_GPIO_TP_INT_N)
 	},
 };
 
