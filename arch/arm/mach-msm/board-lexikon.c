@@ -2731,11 +2731,6 @@ static void __init msm7x30_init_mmc(void)
 		msm_pm_data[MSM_PM_SLEEP_MODE_WAIT_FOR_INTERRUPT].latency;
 	msm_add_sdcc(2, &msm7x30_sdc2_data);
 #endif
-#ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
-	sdcc_vreg_data[2].vreg_data = vreg_s3;
-	sdcc_vreg_data[2].level = 1800;
-	lexikon_init_mmc(system_rev);
-#endif
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	sdcc_vreg_data[3].vreg_data = vreg_mmc;
 	sdcc_vreg_data[3].level = 2850;
@@ -3045,6 +3040,7 @@ static void __init lexikon_init(void)
 #ifdef CONFIG_USB_EHCI_MSM_72K
 	msm_add_host(0, &msm_usb_host_pdata);
 #endif
+    lexikon_init_mmc(system_rev);
 	msm7x30_init_mmc();
 	msm_qsd_spi_init();
 
