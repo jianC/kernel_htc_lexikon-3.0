@@ -944,7 +944,7 @@ static int sco_connect_cfm(struct hci_conn *hcon, __u8 status)
 	return 0;
 }
 
-static int sco_disconn_cfm(struct hci_conn *hcon, __u8 reason)
+static int sco_disconn_cfm(struct hci_conn *hcon, __u8 reason, __u8 status)
 {
 	BT_DBG("hcon %p reason %d", hcon, reason);
 
