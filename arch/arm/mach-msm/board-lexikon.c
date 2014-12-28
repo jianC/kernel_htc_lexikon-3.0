@@ -2537,14 +2537,16 @@ static uint32_t msm_sdcc_setup_vreg(int dev_id, unsigned int enable)
 			mdelay(5);
 		}
 		set_bit(dev_id, &vreg_sts);
-		rc = vreg_set_level(curr->vreg_data, curr->level);
-		if (rc) {
-			printk(KERN_ERR "%s: vreg_set_level() = %d \n",
-					__func__, rc);
-		}
 		rc = vreg_enable(curr->vreg_data);
 		if (rc) {
 			printk(KERN_ERR "%s: vreg_enable() = %d \n",
+					__func__, rc);
+		}
+        if (dev_id == 4)
+            udelay(500);
+		rc = vreg_set_level(curr->vreg_data, curr->level);
+		if (rc) {
+			printk(KERN_ERR "%s: vreg_set_level() = %d \n",
 					__func__, rc);
 		}
 		enabled_once[dev_id - 1] = 1;
