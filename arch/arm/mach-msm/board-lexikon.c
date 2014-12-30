@@ -2651,7 +2651,7 @@ static struct mmc_platform_data msm7x30_sdc2_data = {
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 static unsigned int lexikon_sdc4_slot_type = MMC_TYPE_SD;
 static struct mmc_platform_data msm7x30_sdc4_data = {
-	.ocr_mask	= MMC_VDD_28_29 | MMC_VDD_29_30,
+	.ocr_mask	= MMC_VDD_27_28 | MMC_VDD_28_29,
 	.translate_vdd	= msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 
