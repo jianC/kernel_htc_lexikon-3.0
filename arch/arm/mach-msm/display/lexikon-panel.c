@@ -27,7 +27,7 @@
 #include <asm/io.h>
 #include <asm/mach-types.h>
 #include <mach/msm_fb-7x30.h>
-#include <mach/msm_iomap-7x30.h>
+#include <mach/msm_iomap.h>
 #include <mach/vreg.h>
 #include <mach/panel_id.h>
 
@@ -41,7 +41,6 @@
 #else
 #define B(s...) do {} while(0)
 #endif
-#define DEFAULT_BRIGHTNESS 100
 extern int panel_type;
 
 #define DRIVER_IC_CUT2			4
@@ -55,13 +54,11 @@ extern int panel_type;
 #define PWM_USER_MIN			30
 #define PWM_USER_MAX			255
 
-#define PWM_SHARP_DEF			103
-#define PWM_SHARP_MIN			11
-#define PWM_SHARP_MAX			218
+#define PWM_PANEL_DEF			135
+#define PWM_PANEL_MIN			9
+#define PWM_PANEL_MAX			255
 
-#define PWM_SONY_DEF			135
-#define PWM_SONY_MIN			9
-#define PWM_SONY_MAX			255
+#define DEFAULT_BRIGHTNESS      PWM_USER_DEF
 
 static struct clk *axi_clk;
 
@@ -71,14 +68,14 @@ static struct cabc_t {
 	struct msm_mddi_client_data *client_data;
 	struct mutex lock;
 	unsigned long status;
-	int last_shrink_br;
 } cabc;
 
 enum {
 	GATE_ON = 1 << 0,
+	CABC_STATE,
 };
 
-enum led_brightness brightness_value = DEFAULT_BRIGHTNESS;
+enum led_brightness lexikon_brightness_value = DEFAULT_BRIGHTNESS;
 
 /* use one flag to have better backlight on/off performance */
 static int lexikon_set_dim = 1;
@@ -115,23 +112,12 @@ static void lexikon_set_brightness(struct led_classdev *led_cdev,
 	if (test_bit(GATE_ON, &cabc.status) == 0)
 		return;
 
-	if(panel_type == PANEL_LEXIKON_SONY) {
-		shrink_br = lexikon_shrink_pwm(val, PWM_USER_DEF,
-				PWM_USER_MIN, PWM_USER_MAX, PWM_SONY_DEF,
-				PWM_SONY_MIN, PWM_SONY_MAX);
-	} else {
-		shrink_br = lexikon_shrink_pwm(val, PWM_USER_DEF,
-				PWM_USER_MIN, PWM_USER_MAX, PWM_SHARP_DEF,
-				PWM_SHARP_MIN, PWM_SHARP_MAX);
-	}
+	shrink_br = lexikon_shrink_pwm(val, PWM_USER_DEF,
+			PWM_USER_MIN, PWM_USER_MAX, PWM_PANEL_DEF,
+			PWM_PANEL_MIN, PWM_PANEL_MAX);
 
 	if (!client) {
 		pr_info("null mddi client");
-		return;
-	}
-
-	if (cabc.last_shrink_br == shrink_br) {
-		pr_info("[BKL] identical shrink_br");
 		return;
 	}
 
@@ -144,9 +130,7 @@ static void lexikon_set_brightness(struct led_classdev *led_cdev,
 	client->remote_write(client, 0x00, 0x5500);
 	client->remote_write(client, shrink_br, 0x5100);
 
-	/* Update the last brightness */
-	cabc.last_shrink_br = shrink_br;
-	brightness_value = val;
+	lexikon_brightness_value = val;
 	mutex_unlock(&cabc.lock);
 
 	printk(KERN_INFO "set brightness to %d\n", shrink_br);
@@ -155,7 +139,7 @@ static void lexikon_set_brightness(struct led_classdev *led_cdev,
 static enum led_brightness
 lexikon_get_brightness(struct led_classdev *led_cdev)
 {
-	return brightness_value;
+	return lexikon_brightness_value;
 }
 
 static void lexikon_backlight_switch(int on)
@@ -177,17 +161,82 @@ static void lexikon_backlight_switch(int on)
 		lexikon_set_dim = 1;
 	} else {
 		clear_bit(GATE_ON, &cabc.status);
-		cabc.last_shrink_br = 0;
+		lexikon_set_brightness(&cabc.lcd_backlight, 0);
 	}
+}
+
+static int lexikon_cabc_switch(int on)
+{
+	struct msm_mddi_client_data *client = cabc.client_data;
+
+	if (test_bit(CABC_STATE, &cabc.status) == on)
+               return 1;
+
+	if (on) {
+		printk(KERN_DEBUG "turn on CABC\n");
+		set_bit(CABC_STATE, &cabc.status);
+		mutex_lock(&cabc.lock);
+		client->remote_write(client, 0x01, 0x5500);
+		client->remote_write(client, 0x2C, 0x5300);
+		mutex_unlock(&cabc.lock);
+	} else {
+		printk(KERN_DEBUG "turn off CABC\n");
+		clear_bit(CABC_STATE, &cabc.status);
+		mutex_lock(&cabc.lock);
+		client->remote_write(client, 0x00, 0x5500);
+		client->remote_write(client, 0x2C, 0x5300);
+		mutex_unlock(&cabc.lock);
+	}
+	return 1;
+}
+
+
+static ssize_t
+auto_backlight_show(struct device *dev, struct device_attribute *attr, char *buf);
+static ssize_t
+auto_backlight_store(struct device *dev, struct device_attribute *attr,
+               const char *buf, size_t count);
+#define CABC_ATTR(name) __ATTR(name, 0644, auto_backlight_show, auto_backlight_store)
+
+
+static struct device_attribute auto_attr = CABC_ATTR(auto);
+static ssize_t
+auto_backlight_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	int i = 0;
+
+	i += scnprintf(buf + i, PAGE_SIZE - 1, "%d\n",
+				test_bit(CABC_STATE, &cabc.status));
+	return i;
+}
+
+static ssize_t
+auto_backlight_store(struct device *dev, struct device_attribute *attr,
+	const char *buf, size_t count)
+{
+	int rc;
+	unsigned long res;
+
+	rc = strict_strtoul(buf, 10, &res);
+	if (rc) {
+		printk(KERN_ERR "invalid parameter, %s %d\n", buf, rc);
+		count = -EINVAL;
+		goto err_out;
+	}
+
+	if (lexikon_cabc_switch(!!res))
+		count = -EIO;
+
+err_out:
+	return count;
 }
 
 static int lexikon_backlight_probe(struct platform_device *pdev)
 {
 	int err = -EIO;
+	
 	B(KERN_DEBUG "%s(%d)\n", __func__, __LINE__);
-
 	mutex_init(&cabc.lock);
-	cabc.last_shrink_br = 0;
 	cabc.client_data = pdev->dev.platform_data;
 	cabc.lcd_backlight.name = "lcd-backlight";
 	cabc.lcd_backlight.brightness_set = lexikon_set_brightness;
@@ -195,8 +244,15 @@ static int lexikon_backlight_probe(struct platform_device *pdev)
 	err = led_classdev_register(&pdev->dev, &cabc.lcd_backlight);
 	if (err)
 		goto err_register_lcd_bl;
+		
+	err = device_create_file(cabc.lcd_backlight.dev, &auto_attr);
+	if (err)
+		goto err_out;		
+
 	return 0;
 
+err_out:
+	device_remove_file(&pdev->dev, &auto_attr);
 err_register_lcd_bl:
 	led_classdev_unregister(&cabc.lcd_backlight);
 	return err;
@@ -656,9 +712,11 @@ static int
 lexikon_mddi_init(struct msm_mddi_bridge_platform_data *bridge_data,
 		     struct msm_mddi_client_data *client_data)
 {
-	int i = 0, array_size;
+	int i = 0, array_size = 0;
 	unsigned reg, val;
-	struct nov_regs *init_seq;
+	struct nov_regs *init_seq= NULL;
+	B(KERN_DEBUG "%s(%d)\n", __func__, __LINE__);
+	client_data->auto_hibernate(client_data, 0);
 
 	if (panel_type == PANEL_WHITESTONE) {
 		init_seq = nov_init_seq;
@@ -676,15 +734,18 @@ lexikon_mddi_init(struct msm_mddi_bridge_platform_data *bridge_data,
 		reg = cpu_to_le32(init_seq[i].reg);
 		val = cpu_to_le32(init_seq[i].val);
 		if (reg == REG_WAIT)
-			msleep(val);
+			hr_msleep(val);
 		else {
 			client_data->remote_write(client_data, val, reg);
 			if (reg == 0x1100)
 				client_data->send_powerdown(client_data);
 		}
 	}
+	client_data->auto_hibernate(client_data, 1);
+		
 	if(axi_clk)
 		clk_set_rate(axi_clk, 0);
+
 	return 0;
 }
 
@@ -692,6 +753,7 @@ static int
 lexikon_mddi_uninit(struct msm_mddi_bridge_platform_data *bridge_data,
 			struct msm_mddi_client_data *client_data)
 {
+	B(KERN_DEBUG "%s(%d)\n", __func__, __LINE__);
 	return 0;
 }
 
@@ -699,7 +761,7 @@ static int
 lexikon_panel_blank(struct msm_mddi_bridge_platform_data *bridge_data,
 			struct msm_mddi_client_data *client_data)
 {
-	B(KERN_DEBUG "%s\n", __func__);
+	B(KERN_DEBUG "%s(%d)\n", __func__, __LINE__);
 	client_data->auto_hibernate(client_data, 0);
 	/* set dim off for performance */
 	client_data->remote_write(client_data, 0x0, 0x5300);
@@ -714,13 +776,13 @@ static int
 lexikon_panel_unblank(struct msm_mddi_bridge_platform_data *bridge_data,
 			struct msm_mddi_client_data *client_data)
 {
-	B(KERN_DEBUG "%s\n", __func__);
+	B(KERN_DEBUG "%s(%d)\n", __func__, __LINE__);
 	client_data->auto_hibernate(client_data, 0);
 	client_data->remote_write(client_data, 0x24, 0x5300);
 	client_data->remote_write(client_data, 0x0A, 0x22C0);
-	client_data->auto_hibernate(client_data, 1);
 	hr_msleep(30);
 	lexikon_backlight_switch(LED_FULL);
+	client_data->auto_hibernate(client_data, 1);
 	return 0;
 }
 
@@ -844,17 +906,14 @@ static struct platform_driver lexikon_backlight_driver = {
 };
 
 static struct msm_mdp_platform_data mdp_pdata = {
-#ifdef CONFIG_OVERLAY_FORCE_UPDATE
-	.overrides = MSM_MDP4_MDDI_DMA_SWITCH | MSM_MDP_FORCE_UPDATE,
+#ifdef CONFIG_MDP4_HW_VSYNC
+	.xres = 480,
+	.yres = 800,
+	.back_porch = 4,
+	.front_porch = 2,
+	.pulse_width = 4,
 #else
 	.overrides = MSM_MDP4_MDDI_DMA_SWITCH,
-#endif
-#ifdef CONFIG_MDP4_HW_VSYNC
-       .xres = 480,
-       .yres = 800,
-       .back_porch = 4,
-       .front_porch = 2,
-       .pulse_width = 4,
 #endif
 };
 
