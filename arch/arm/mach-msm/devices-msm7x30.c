@@ -280,6 +280,7 @@ struct platform_device msm_device_i2c = {
 	.resource	= resources_i2c,
 };
 
+#if 0
 static struct resource qsd_spi_resources[] = {
 	{
 		.name   = "spi_irq_in",
@@ -321,6 +322,7 @@ struct platform_device qsd_device_spi = {
 	.num_resources	= ARRAY_SIZE(qsd_spi_resources),
 	.resource	= qsd_spi_resources,
 };
+#endif
 
 #define MSM_QUP_PHYS           0xA8301000
 #define MSM_GSBI_QUP_I2C_PHYS  0xA8300000

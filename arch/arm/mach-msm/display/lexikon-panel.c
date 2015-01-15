@@ -100,7 +100,7 @@ static int lexikon_shrink_pwm(int brightness, int user_def,
 			panel_min;
 	}
 
-        return brightness;
+    return brightness;
 }
 
 static void lexikon_set_brightness(struct led_classdev *led_cdev,
