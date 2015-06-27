@@ -159,6 +159,7 @@ enum {
 	MDP4_MIXER_STAGE0,	/* zorder 0 */
 	MDP4_MIXER_STAGE1,	/* zorder 1 */
 	MDP4_MIXER_STAGE2	/* zorder 2 */
+    MDP4_MIXER_STAGE_MAX
 };
 
 #define MDP4_MAX_STAGE	4
@@ -347,6 +348,7 @@ int mdp4_overlay_unset(struct mdp_device *mdp_dev, struct fb_info *info, int ndx
 int mdp4_overlay_play(struct mdp_device *mdp_dev, struct fb_info *info, struct msmfb_overlay_data *req,
 				struct file **pp_src_file);
 int mdp4_overlay_change_z_order_vg_pipes(struct fb_info *info);
+int mdp4_mixer_info(int mixer_num, struct mdp_mixer_info *info);
 struct mdp4_overlay_pipe *mdp4_overlay_pipe_alloc(int ptype, bool usevg);
 void mdp4_overlay_pipe_free(struct mdp4_overlay_pipe *pipe);
 void mdp4_overlay_dmap_cfg(struct mdp4_overlay_pipe *pipe, int lcdc);

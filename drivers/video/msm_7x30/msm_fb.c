@@ -899,6 +899,29 @@ static int msmfb_overlay_change_z_order_vg_pipes(struct fb_info *info, unsigned 
 
 	return ret;
 }
+
+static int msmfb_mixer_info(struct fb_info *info, 
+unsigned long *argp)
+{
+	int     ret, cnt;
+	struct msmfb_mixer_info_req req;
+
+	ret = copy_from_user(&req, argp, sizeof(req));
+	if (ret) {
+		pr_err("%s: failed\n", __func__);
+		return ret;
+	}
+
+	cnt = mdp4_mixer_info(req.mixer_num, req.info);
+	req.cnt = cnt;
+	ret = copy_to_user(argp, &req, sizeof(req));
+	if (ret)
+		pr_err("%s:msmfb_overlay_blt_off ioctl failed\n",
+		__func__);
+
+	return cnt;
+}
+
 #endif
 
 DEFINE_SEMAPHORE(msm_fb_ioctl_ppp_sem);
@@ -1079,6 +1102,16 @@ static int msmfb_ioctl(struct fb_info *p, unsigned int cmd, unsigned long arg)
 			ret = msmfb_overlay_change_z_order_vg_pipes(p, argp);
 			up(&msm_fb_ioctl_ppp_sem);
 		}
+		break;
+	case MSMFB_MIXER_INFO:
+		if (!atomic_read(&mdpclk_on)) {
+			PR_DISP_ERR("MSMFB_MIXER_INFO during suspend\n");
+            ret = -EINVAL;
+        } else {       
+		    down(&msm_fb_ioctl_ppp_sem);
+		    ret = msmfb_mixer_info(p, argp);
+		    up(&msm_fb_ioctl_ppp_sem);
+        }
 		break;
 #endif
 #if defined(CONFIG_FB_MSM_MDP_ABL)
